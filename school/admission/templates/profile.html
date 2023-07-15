@@ -1,0 +1,106 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+<style>
+  *{
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  }
+    .popup {  
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  width: 400px;
+  height:fit-content;
+  background-color: transparent; 
+  border: 1px solid white;   
+}
+
+.popup-content {
+  margin: 0 auto;
+  background-color: transparent;   
+  width: 100%;
+    
+  height: fit-content; 
+  padding: 10px;
+}
+
+.close {
+  color: #e62d2d;
+  float: right;
+  font-size: 32px;  
+  cursor: pointer;
+}
+input[type=submit]:hover,
+.close:hover,
+.close:focus, 
+#profileimg:hover {
+  color: rgb(253, 81, 81);
+  text-decoration: none;
+  cursor: pointer;
+}
+input[type=submit] {
+    border-radius: 20px;
+    border: none;
+   
+    width: 66px;
+    height: 40px; 
+    background-color: rgb(129, 111, 86); 
+    color: #ffffff;
+    font-style: bold;
+    }
+h5,p {
+  text-align: center;
+  margin-top: 10px;
+  color: white;
+  display: inline;
+  padding: 20px;
+}
+#profileimg {
+  height: 80px;
+  width: 80px;
+  border-radius: 60%; 
+  padding: 10px; 
+}
+
+</style>
+
+<div id="popupForm" class="popup">
+  <span id="closeButton" class="close">&times;</span>
+  <h5>Update Profile</h5><hr style="background-color: white;">
+ 
+  <div class="popup-content">  
+        
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div>    
+          <img id="profileimg" src="{{user.profile.image.url}}">
+          <p>{{user.email}}</p>
+        </div>
+        <div style="padding-left: 10px;">
+          <label for="image"  class="fa fa-upload"  title="Update Profile Picture">Upload</label>
+          <input id="image" type="file" name="image" hidden>           
+        </div>         
+          <div style=" padding-left: 300px;"><input type="submit" value="Update">
+        </div>       
+    </form>
+  </div>
+  <script>
+       // Get references to the button and form elements
+  const closeButton = document.getElementById('closeButton');
+  const uploadForm = document.getElementById('popupForm');
+
+  // Add event listener to the button
+  closeButton.addEventListener('click', function() {
+    // Hide the form by setting its display property to "none"
+    uploadForm.style.display = 'none';
+    
+    // Redirect to another page
+    window.location.href = '/index';
+  });
+</script>
+</div>
+
+{% endblock content %}
