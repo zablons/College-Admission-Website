@@ -1,17 +1,15 @@
 {% extends 'index.html' %}
 {% load static %}
 {% block content %}
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 <style>
   *{
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
   }
-    .popup {  
-  position: fixed;
-  top: 60px;
-  right: 10px;
-  width: 400px;
+    .popup {   
+  margin: 0 auto;
+  max-width:400px;
   height:fit-content;
   background-color: transparent; 
   border: 1px solid white;   
@@ -20,8 +18,7 @@
 .popup-content {
   margin: 0 auto;
   background-color: transparent;   
-  width: 100%;
-    
+  width: 100%;    
   height: fit-content; 
   padding: 10px;
 }
@@ -31,6 +28,7 @@
   float: right;
   font-size: 32px;  
   cursor: pointer;
+  padding-right: 5px;
 }
 input[type=submit]:hover,
 .close:hover,
@@ -42,65 +40,98 @@ input[type=submit]:hover,
 }
 input[type=submit] {
     border-radius: 20px;
-    border: none;
-   
-    width: 66px;
-    height: 40px; 
-    background-color: rgb(129, 111, 86); 
+    border: none;   
+    width: 70px;
+    height: 42px; 
+    background-color: rgb(0, 81, 255); 
     color: #ffffff;
     font-style: bold;
+    font-size: 18px;
     }
 h5,p {
   text-align: center;
   margin-top: 10px;
-  color: white;
-  display: inline;
-  padding: 20px;
+  color: white; 
+  padding: 10px;
 }
 #profileimg {
-  height: 80px;
-  width: 80px;
-  border-radius: 60%; 
-  padding: 10px; 
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;   
+  
+}
+#email,#phone,#adm {
+  border: none;
+  border-bottom: 1px solid white;
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+  margin-bottom: 5px;
+  outline: none;
+  background: none;
+  color: azure; 
+  text-align: center;
+  border-radius: 10px; 
+}
+label{
+  cursor: pointer;
+  padding-left: 60px;
+  padding-right: 76px;
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-radius: 10px; 
+  background-color: rgb(97, 109, 134);
+  
 }
 
 </style>
 
 <div id="popupForm" class="popup">
-  <span id="closeButton" class="close">&times;</span>
+  <span id="closeButton" class="close" title="Close">&times;</span>
   <h5>Update Profile</h5><hr style="background-color: white;">
  
   <div class="popup-content">  
         
     <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <div>    
-          <img id="profileimg" src="{{user.profile.image.url}}">
-          <p>{{user.email}}</p>
+        {% csrf_token %}       
+        {% for message in messages %}
+      <div class="alert alert-success">{{message}}</div>
+      {% endfor %}  
+        <div>        
+                    
         </div>
         <div style="padding-left: 10px;">
-          <label for="image"  class="fa fa-upload"  title="Update Profile Picture">Upload</label>
-          <input id="image" type="file" name="image" hidden>           
+          <label style="margin-left: 70px;" for="image" title="Update Profile Picture">
+          <input id="image" type="file" name="image" hidden>
+          <img id="profileimg" src="{{request.user.profile.image.url}}" title="Upload Profile Image">          
+          </label><hr> 
+          <div style="margin-left: 25%;"> 
+            <label>Update:</label><br><br>
+            <input type="email" name="email" id="email" placeholder="Email address" value="{{ request.user.email }}" title="Email address">
+            <input type="text" name="mobile_no" id="phone" placeholder="Phone Number" value="{{ request.user.profile.mobile_no }}" title="Phone Number"> 
+            <input type="text" name="adm_no" id="adm" placeholder="Admission Number" value="{{ request.user.profile.adm_no }}"
+             pattern="[a-zA-Z]{3}-\d{3}-\d{3}/\d{4}" title="Admission number in the format abc-123-456/yyyy"> 
+          </div><br>       
         </div>         
-          <div style=" padding-left: 300px;"><input type="submit" value="Update">
-        </div>       
+          <div style=" padding-left:150px;"><input type="submit" id="submitButton" value="Update">
+        </div><br>       
     </form>
   </div>
   <script>
-       // Get references to the button and form elements
-  const closeButton = document.getElementById('closeButton');
-  const uploadForm = document.getElementById('popupForm');
+        // Get references to the button and form elements
+    const closeButton = document.getElementById('closeButton');
+    const uploadForm = document.getElementById('popupForm');
 
-  // Add event listener to the button
-  closeButton.addEventListener('click', function() {
-    // Hide the form by setting its display property to "none"
-    uploadForm.style.display = 'none';
-    
-    // Redirect to another page
-    window.location.href = '/index';
-  });
-</script>
+    // Add event listener to the button
+    closeButton.addEventListener('click', function() {
+      // Hide the form by setting its display property to "none"
+      uploadForm.style.display = 'none';
+      
+      // Redirect to another page
+      window.location.href = '/index';
+    });
+  </script>
+
 </div>
 
 {% endblock content %}

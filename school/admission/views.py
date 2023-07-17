@@ -20,7 +20,7 @@ def Signin(request):
         password1 = request.POST['password1']
 
         user = authenticate(request, username=username, password=password1)
-
+        
         if user is not None:
             login(request, user)
             return redirect('index')
@@ -74,14 +74,37 @@ def Signout(request):
 
 @login_required(login_url='login')
 def Upload(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        profile = None
+
     if request.method == 'POST':
+        email = request.POST.get('email')
+        mobile_no = request.POST.get('mobile_no')
+        adm_no = request.POST.get('adm_no')
         image_file = request.FILES.get('image')
-        if image_file:
-            profile = request.user.profile
-            profile.image = image_file
+
+        if email:
+            request.user.email = email
+            request.user.save()
+
+        if mobile_no:
+            profile.mobile_no = mobile_no
             profile.save()
-            return redirect('profile')
-    return render(request, 'profile.html')
+
+        if adm_no:
+            profile.adm_no = adm_no
+            profile.save()
+
+        if image_file:
+            profile.image = image_file
+            profile.save()           
+
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+
+    return render(request, 'profile.html', {'profile': profile})
 
 
 @receiver(post_save, sender=User)
